@@ -3,14 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/core": "^10.0.14",
     "@types/jest": "^24.0.15",
     "@types/node": "^12.0.10",
     "@types/react": "^16.8.22",
     "@types/react-dom": "^16.8.4",
+    "@types/react-webcam": "^1.1.0",
     "kaltura-typescript-client": "file:libs/kaltura-typescript-client-6.3.1-v20180513-153409.tgz",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
+    "react-spinners": "^0.5.4",
+    "react-spinners-kit": "^1.9.0",
+    "react-webcam": "^1.1.1",
+    "styled-components": "^4.3.2",
     "typescript": "^3.5.2"
   },
   "scripts": {
