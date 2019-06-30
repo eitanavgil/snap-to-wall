@@ -1,7 +1,7 @@
 .App {
     text-align: center;
-    background-color: #282c34;
-    height: 100vh;
+    height: 90vh;
+    width: 100%;
 }
 
 .App-logo {
@@ -11,8 +11,8 @@
 }
 
 .App-body {
-    background-color: #282c34;
-    min-height: 100vh;
+    text-align: center;
+    min-height: 50vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -26,10 +26,9 @@
 }
 
 .spinner-wrapper {
-    display: inline-block;
     left: 50%;
-    top: 50vh;
-    margin-left: -100px;
+    top: 40vh;
+    margin-left: -50px;
     position: absolute;
 }
 
@@ -44,12 +43,22 @@
 .instructions-body {
     font-weight: 400;
 }
-
+.snap-button{
+    text-align: center;
+    position: relative;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: none;
+    border: none;
+    outline: none;
+}
 .camera{
-    width: 20vw;
+    width: 40vw;
 }
 
-.webcam{
-    width: 100vw;
+#hidden-new-file{
+    visibility: hidden;
 }
-
