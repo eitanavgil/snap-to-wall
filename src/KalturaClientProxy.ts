@@ -1,7 +1,9 @@
 import {KalturaClient, KalturaMultiRequest, KalturaRequest} from "kaltura-typescript-client";
 import {KalturaMediaEntry, KalturaMediaEntryArgs} from "kaltura-typescript-client/api/types/KalturaMediaEntry";
 import {KalturaMediaType} from "kaltura-typescript-client/api/types/KalturaMediaType";
-import {KalturaUploadToken, KalturaUploadTokenArgs} from "kaltura-typescript-client/api/types/KalturaUploadToken";
+import {MediaGetAction, MediaGetActionArgs} from "kaltura-typescript-client/api/types/MediaGetAction";
+import {UploadTokenAddAction, UploadTokenAddActionArgs} from "kaltura-typescript-client/api/types/UploadTokenAddAction";
+import {KalturaUploadToken} from "kaltura-typescript-client/api/types/KalturaUploadToken";
 
 export interface ClientConfig {
     ks: string;
@@ -11,7 +13,7 @@ export interface ClientConfig {
 
 export class KalturaClientProxy {
 
-    kClient?: KalturaClient;
+    kClient: KalturaClient;
 
     constructor(config: ClientConfig) {
         this.kClient = this.initClient(config)
@@ -26,7 +28,7 @@ export class KalturaClientProxy {
     initClient(config: ClientConfig): KalturaClient {
         return new KalturaClient(
             {
-                endpointUrl: "",
+                endpointUrl: "http://www.kaltura.com/",
                 clientTag: "snapToWall"
             },
             {
@@ -35,27 +37,41 @@ export class KalturaClientProxy {
         );
     }
 
-    public createEntry() {
-        let kalturaMediaEntryArgs: KalturaMediaEntryArgs = {
-            mediaType: KalturaMediaType.image
-        }
-        const mediaEntry: KalturaMediaEntry = new KalturaMediaEntry(kalturaMediaEntryArgs);
-        return mediaEntry;
+    // public createEntry() {
+    //     let kalturaMediaEntryArgs: KalturaMediaEntryArgs = {
+    //         mediaType: KalturaMediaType.image
+    //     }
+    //     const mediaEntry: KalturaMediaEntry = new KalturaMediaEntry(kalturaMediaEntryArgs);
+    //     return mediaEntry;
+    // }
+
+
+    public createUploadToken(callback: (token: any) => void) {
+        const uploadTokenAddActionArgs: UploadTokenAddActionArgs = {};
+        const uploadTokenAdd: UploadTokenAddAction = new UploadTokenAddAction(uploadTokenAddActionArgs);
+        let multiRequest: KalturaMultiRequest = new KalturaMultiRequest(uploadTokenAdd);
+        this.kClient.multiRequest(multiRequest).then((data: any) => {
+                callback(data[0]["result"]);
+            },
+            err => {
+                console.log("Err ", err);
+            })
     }
 
-    public createFileStream() {
+    // This is not really relevant to this app - it is just to show a template example of how to cal a server API
+    // and get response from it.
 
-    }
+    public getEntryById(id: string) {
+        const mediaGetActionArgs: MediaGetActionArgs = {entryId: id};
+        const mediaGetAction: MediaGetAction = new MediaGetAction(mediaGetActionArgs);
+        let multiRequest: KalturaMultiRequest = new KalturaMultiRequest(mediaGetAction);
+        this.kClient.multiRequest(multiRequest).then((data: any) => {
+                console.log("Got entry ", data);
+            },
+            err => {
+                console.log("Err ", err);
 
-    public createUploadToken(file: File) {
-        const kalturaUploadTokenArgs: KalturaUploadTokenArgs = {
-            fileName: file.name,
-            fileSize: file.size
-        }
-        const kalturaUploadToken: KalturaUploadToken = new KalturaUploadToken(kalturaUploadTokenArgs);
-        let multiRequest: KalturaMultiRequest = new KalturaMultiRequest(kalturaUploadToken)
-
-
+            })
     }
 
 }

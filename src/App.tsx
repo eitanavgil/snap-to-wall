@@ -1,9 +1,28 @@
 import "./App.css";
-import React, {SyntheticEvent} from "react";
+import React from "react";
 import {Component} from "react";
 import {WhisperSpinner} from "react-spinners-kit";
 import {ClientConfig, KalturaClientProxy} from "./KalturaClientProxy";
+import {KalturaUploadToken} from "kaltura-typescript-client/api/types/KalturaUploadToken";
 
+/**
+ * This app is designed to run on phones.
+ * The end user is a participant in a convention or meetup. Once he/she takes
+ * a selfie or uploads an image, it will appear on a projected wall (with or without moderation).
+ * Backend will be a Kaltura real account, and for first phase we will nave basic upload flow with only images.
+ *
+ * App main requirements
+ *  - user scans QR code to get to the event URL
+ *  - user hits the URL and receives: user-id, account, event properties etc'.
+ *  - user generates UUID and saves to cookie?
+ *  - fetch KS with user-id
+ *  - app gets to ideal mode - show UI to allow camera API
+ *  - let user snap a selfie
+ *  - let user cancel or replace pic (show a preview)
+ *  - let user upload
+ *  - optional - add a throttle logic (prop of event?)
+ *
+ */
 interface Props {
 }
 
@@ -24,9 +43,10 @@ interface State {
     status: appStatus;
 }
 
-export const KS_SERVICE_URL = "http://192.168.1.115/php5/service.php";
+// path to get KS. cannot be part of current project as this holds admin-secrete
 
-// export const KS_SERVICE_URL = "http://localhost/php5/service.php";
+// export const KS_SERVICE_URL = "http://192.168.1.115/php5/service.php";
+export const KS_SERVICE_URL = "http://localhost/php5/service.php";
 
 class App extends Component<Props, State> {
 
@@ -38,8 +58,8 @@ class App extends Component<Props, State> {
         this.handleSnap = this.handleSnap.bind(this);
         this.handleUsername = this.handleUsername.bind(this);
         this.handleCameraChange = this.handleCameraChange.bind(this);
-        // todo - unique user with cookie. Once uploaded twice - free him from moderation
-        // todo - KMC moderation configuration
+        // todo - set unique user with cookie. Once uploaded twice - free him from moderation?
+        // todo - KMC moderation configuration by default on that pid - optional
         this.state = {snap: false, loading: true, userId: 'eitan', status: appStatus.initial};
         this.getKs();
     }
@@ -61,19 +81,28 @@ class App extends Component<Props, State> {
             });
     }
 
+    receivedToken(token: any) {
+        console.log(">>>> -- ", token);
+    }
+
     handleCameraChange(e: any) {
         if (!this.clientProxy) {
-            console.log("Kaltura Client is missing")
+            console.log("Kaltura Client is missing");
             return;
         }
-        debugger;
         if (!e.target || !e.target.files || e.target.files.length === 0) {
             console.log("File is missing or corrupted");
             return;
         }
-        const newEntry = this.clientProxy.createEntry();
-        const uploadToken = this.clientProxy.createUploadToken(e.target.files[0]);
-        const fileStream = this.clientProxy.createFileStream();
+        this.clientProxy.createUploadToken(this.receivedToken);
+
+        // this is just an example to test the kaltura client API
+
+        this.clientProxy.getEntryById("1_ilwilm2w");
+
+        // const newEntry = this.clientProxy.createEntry();
+        // const uploadToken = this.clientProxy.createUploadToken(e.target.files[0]);
+        // const fileStream = this.clientProxy.createFileStream();
 
         console.log(">>>>", e.target.files[0]);
     }
