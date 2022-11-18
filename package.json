@@ -10,7 +10,7 @@
     "kaltura-typescript-client": "file:libs/kaltura-typescript-client-6.3.1-v20180513-153409.tgz",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1",
+    "react-scripts": "5.0.1",
     "react-spinners-kit": "^1.9.0",
     "styled-components": "^4.3.2",
     "typescript": "^3.5.2"
